@@ -1,46 +1,39 @@
 <?php
-class Movie {
-    public $title;
-    public $release_year;
-    public $director;
-    public $description;
-
-    public function __construct($title, $release_year, $director, $description) {
-        $this->title = $title;
-        $this->release_year = $release_year;
-        $this->director = $director;
-        $this->description = $description;
-    }
-}
-
-$movies = array(
-    new Movie("Iron Man 3", 2013, "Shane Black", "El descarado pero brillante empresario Tony Stark/Iron Man se enfrentará a un enemigo cuyo poder no conoce límites. Cuando Stark comprende que su enemigo ha destruido su universo personal, se embarca en una angustiosa búsqueda para encontrar a los responsables."),
-    new Movie("Los Vengadores", 2012, "Joss Whedon", "Los héroes más poderosos de la Tierra deben unirse y aprender a luchar en equipo si quieren evitar que el travieso Loki y su ejército alienígena esclavicen a la humanidad."),
-    new Movie("Guardianes de la Galaxia", 2014, "James Gunn", "Un grupo de criminales intergalácticos deben unirse para detener a un guerrero fanático con planes para purgar el universo.")
-);
-
-function generate_movie_html($movie) {
-    return "<li>
-                <h2>{$movie->title}</h2>
-                <p><strong>Año de lanzamiento:</strong> {$movie->release_year}</p>
-                <p><strong>Director:</strong> {$movie->director}</p>
-                <p><strong>Descripción:</strong> {$movie->description}</p>
-            </li>";
-}
+// Incluimos las clases necesarias
+require_once "classes/classes.php";
+// Obtenemos las películas
+$movies = MarvelAPI::getNextMovies();
 
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Aplicación de Películas de Marvel</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Películas de Marvel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Lista de Películas de Marvel</h1>
-    <ul>
-    <?php foreach($movies as $movie): ?>
-        <?php echo generate_movie_html($movie); ?>
-    <?php endforeach; ?>
-    </ul>
+<body class="bg-body-tertiary">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center">La siguientes películas son...</h2>
+<!-- Mostramos las películas-->
+                <?php foreach ($movies as $movie): ?>
+                <div class="row align-items-center my-4">
+                    <div class="col-md-4 text-center">
+                        <img src="<?= $movie->posterUrl; ?>" class="img-fluid rounded" alt="Poster de <?= $movie->title; ?>">
+                    </div>
+                    <div class="col-md-8">
+                        <h3><?= $movie->title; ?> se estrena en <?= $movie->daysUntil; ?> días</h3>
+                        <p>Fecha de estreno: <?= $movie->releaseDate; ?></p>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
